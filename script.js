@@ -81,6 +81,10 @@ const images = [
     },
   ];
   
+  let currentImageValue = 0, 
+  displayNumber = 0, // don't need to use let keyword in this occurence because we have seperated the variables by a comma
+  score = 0 // set current score
+  
   const setImageSrc = (randomImageName) => {
     const imageContainer = document.getElementById("imageContainer");
     if (imageContainer.hasChildNodes()) {
@@ -91,17 +95,21 @@ const images = [
     imageContainer.appendChild(image);
   };
 
+
   generateDisplayNumber = (numberOfItems, plusOrMinus) => {
     const split = Math.floor(Math.random() * 2)
     if(split === 0) {
         // display real number
         document.getElementById("number").innerHTML = numberOfItems;
+        displayNumber = numberOfItems;
     } else {
-        //or display a number that is one higher or one lower
+        //or display a false number that is one higher or one lower
         document.getElementById("number").innerHTML = `${
             numberOfItems + plusOrMinus
         }`; 
+        displayNumber = numberOfItems + plusOrMinus;
     }
+    currentImageValue = numberOfItems;
   };
 
   const generatePlusOrMinus = () => {
@@ -131,8 +139,19 @@ const images = [
   };
   
   let timerRef;
+
+  const match = () => {
+      currentImageValue === displayNumber ? score++ : score-- // if user got it correct, the score will increase, if not the score will decrease by 1
+      document.getElementById("currentScore").innerHTML = score;
+  }
+
+  const noMatch = () => {
+    currentImageValue !== displayNumber ? score++ : score-- 
+    document.getElementById("currentScore").innerHTML = score;
+}
+
   const timer = () => {
-    timerRef = setInterval(generate, 3000);
+    timerRef = setInterval(generate, 5000);
   };
   
   const play = () => {
