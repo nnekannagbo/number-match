@@ -81,13 +81,7 @@ const images = [
     },
   ];
   
-  const generate = () => {
-    if (images.length === 0) {
-      stopTimer();
-      return;
-    }
-    const randomNumber = Math.floor(Math.random() * images.length);
-    const randomImageName = images[randomNumber].image_name;
+  const setImageSrc = (randomImageName) => {
     const imageContainer = document.getElementById("imageContainer");
     if (imageContainer.hasChildNodes()) {
       imageContainer.removeChild(imageContainer.firstElementChild);
@@ -95,12 +89,50 @@ const images = [
     const image = document.createElement("img");
     image.src = `images/${randomImageName}`;
     imageContainer.appendChild(image);
+  };
+
+  generateDisplayNumber = (numberOfItems, plusOrMinus) => {
+    const split = Math.floor(Math.random() * 2)
+    if(split === 0) {
+        // display real number
+        document.getElementById("number").innerHTML = numberOfItems;
+    } else {
+        //or display a number that is one higher or one lower
+        document.getElementById("number").innerHTML = `${
+            numberOfItems + plusOrMinus
+        }`; 
+    }
+  };
+
+  const generatePlusOrMinus = () => {
+    const number0to1 = Math.floor(Math.random() * 2);
+    return number0to1 === 0 ? -1 : +1;
+  };
+
+  const setImageName = (randomImageName) => {
+    // captue only the image name by using slice. start at beginning of name "0" then take length of image name which would stop at letter g from .jpeg, then go back 4 spaces "-4" so you're removing the .jpeg
+    const imageName = randomImageName.slice(0, randomImageName.length - 4);
+    document.getElementById("item-name").innerHTML = imageName + "?";
+  }
+
+  const generate = () => {
+    if (images.length === 0) {
+      stopTimer();
+      return;
+    }
+    const randomNumber = Math.floor(Math.random() * images.length);
+    const randomImageName = images[randomNumber].image_name;
+    setImageSrc(randomImageName);
+    setImageName(randomImageName);
+    const plusOrMinus = generatePlusOrMinus();
+    const numberOfItems = images[randomNumber].number_of_items;
+    generateDisplayNumber(numberOfItems, plusOrMinus);
     images.splice(randomNumber, 1);
   };
   
   let timerRef;
   const timer = () => {
-    timerRef = setInterval(generate, 500);
+    timerRef = setInterval(generate, 3000);
   };
   
   const play = () => {
