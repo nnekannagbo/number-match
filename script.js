@@ -83,7 +83,8 @@ const images = [
   
   let currentImageValue = 0, 
   displayNumber = 0, // don't need to use let keyword in this occurence because we have seperated the variables by a comma
-  score = 0 // set current score
+  score = 0, // set current score
+  totalAvailable = image.length;
   
   const setImageSrc = (randomImageName) => {
     const imageContainer = document.getElementById("imageContainer");
@@ -151,14 +152,23 @@ const images = [
 }
 
   const timer = () => {
-    timerRef = setInterval(generate, 5000);
+    timerRef = setInterval(generate, 300);
   };
   
   const play = () => {
+      document.getElementById("message").style.display = "none";
+      document.getElementById("startScreen").style.display = "none";
+      document.getElementById("play-button").style.display = "none";
     generate();
     timer();
   };
   
+  const endOfGame = () => {
+    document.getElementById("message").style.display = "block"; // change display type from none to block to display message on screen when game ends
+    document.getElementById("imageContainer").style.display = "none";
+    document.getElementById("message").innerHTML = `Game over, your score was ${score} / ${totalAvailable}`;
+  };
+
   const stopTimer = () => {
     clearInterval(timerRef);
   };
