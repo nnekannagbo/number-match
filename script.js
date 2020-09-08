@@ -81,11 +81,18 @@ const images = [
     },
   ];
   
+  const timeDelay = 3000;
   let currentImageValue = 0, 
-  displayNumber = 0, // don't need to use let keyword in this occurence because we have seperated the variables by a comma
-  score = 0, // set current score
-  totalAvailable = image.length;
-  
+    displayNumber = 0, // don't need to use let keyword in this occurence because we have seperated the variables by a comma
+    score = 0, // set current score
+    totalAvailable = images.length,
+    chosen = false;
+
+  document.getElementById("statsContent").style.visibility = "hidden";
+  document.getElementById("currentScore").innerHTML = score;
+  document.getElementById("totalAvailable").innerHTML = totalAvailable;
+  document.getElementById("timeSetting").innerHTML = timeDelay / 1000;
+
   const setImageSrc = (randomImageName) => {
     const imageContainer = document.getElementById("imageContainer");
     if (imageContainer.hasChildNodes()) {
@@ -93,6 +100,7 @@ const images = [
     }
     const image = document.createElement("img");
     image.src = `images/${randomImageName}`;
+    image.classList.add("fade");
     imageContainer.appendChild(image);
   };
 
@@ -126,9 +134,12 @@ const images = [
 
   const generate = () => {
     if (images.length === 0) {
+      endOfGame();
       stopTimer();
       return;
     }
+    chosen = false; // so the value of chosen will only ever be = to false once the game starts or once we generate a new image
+
     const randomNumber = Math.floor(Math.random() * images.length);
     const randomImageName = images[randomNumber].image_name;
     setImageSrc(randomImageName);
@@ -142,31 +153,41 @@ const images = [
   let timerRef;
 
   const match = () => {
-      currentImageValue === displayNumber ? score++ : score-- // if user got it correct, the score will increase, if not the score will decrease by 1
-      document.getElementById("currentScore").innerHTML = score;
+      if (!chosen) {
+        currentImageValue === displayNumber ? score++ : score--; // if user got it correct, the score will increase, if not the score will decrease by 1
+        chosen = true; 
+        document.getElementById("currentScore").innerHTML = score;
+      }
   }
 
   const noMatch = () => {
-    currentImageValue !== displayNumber ? score++ : score-- 
-    document.getElementById("currentScore").innerHTML = score;
+    if (!chosen) {
+      currentImageValue !== displayNumber ? score++ : score--;
+      chosen = true; //once user has made any selection, chosen variable will be true 
+      document.getElementById("currentScore").innerHTML = score;
+    }
 }
 
   const timer = () => {
-    timerRef = setInterval(generate, 300);
+    timerRef = setInterval(generate, timeDelay);
   };
   
   const play = () => {
       document.getElementById("message").style.display = "none";
       document.getElementById("startScreen").style.display = "none";
       document.getElementById("play-button").style.display = "none";
-    generate();
-    timer();
+      document.getElementById("statsContent").style.visibility = "visible";
+      generate();
+      timer();
   };
   
   const endOfGame = () => {
+    document.getElementById("statsContent").style.visibility = "hidden";
     document.getElementById("message").style.display = "block"; // change display type from none to block to display message on screen when game ends
     document.getElementById("imageContainer").style.display = "none";
+    document.getElementById("statsContent").style.display = "none";
     document.getElementById("message").innerHTML = `Game over, your score was ${score} / ${totalAvailable}`;
+    setTimeout(() => location.reload(), 3000);
   };
 
   const stopTimer = () => {
