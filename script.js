@@ -81,7 +81,7 @@ const images = [
     },
   ];
   
-  const timeDelay = 3000;
+  const timeDelay = 4000;
   let currentImageValue = 0, 
     displayNumber = 0, // don't need to use let keyword in this occurence because we have seperated the variables by a comma
     score = 0, // set current score
